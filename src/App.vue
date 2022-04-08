@@ -1,23 +1,45 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <router-view/>
-  </div>
+    <a-config-provider :locale="zh_CN">
+        <div id="app">
+            <transition name="fade" mode="out-in">
+                <router-view/>
+            </transition>
+        </div>
+    </a-config-provider>
 </template>
 
 <script>
-export default {
-  name: 'App'
-}
+    import zh_CN from "ant-design-vue/lib/locale-provider/zh_CN";
+    import moment from "moment";
+    import "moment/locale/zh-cn";
+
+    moment.locale("zh-cn");
+
+    export default {
+        name: "App",
+        mounted() {
+        },
+        provide() {
+            return {};
+        },
+        components: {},
+        data() {
+            return {
+                zh_CN
+            };
+        },
+        methods: {
+            
+        }
+    };
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style scoped>
+    @import "assets/styles/wrapper.css";
+
+    #app {
+        margin: 0;
+        height: 100%;
+        overflow-x: hidden;
+    }
 </style>
