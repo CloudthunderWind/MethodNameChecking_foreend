@@ -2,24 +2,28 @@
     <div class="bg">
         <div class="center-block login-size">
             <card bg-color="#f5f7fa" class="login-card">
-                <div slot="title" class="login-title">登录</div>
-                <div slot="body" class="login-form">
-                    <div class="login-form-item">
-                        <cb-input :prefix="userIcon" type="form-input"
-                                  v-model="userName"
-                                  placeholder="请输入用户名"/>
+                <template v-slot:title>
+                    <div class="login-title">登录</div>
+                </template>
+                <template v-slot:body>
+                    <div class="login-form">
+                        <div class="login-form-item">
+                            <cb-input :prefix="userIcon" type="form-input"
+                                      v-model="userName"
+                                      placeholder="请输入用户名"/>
+                        </div>
+                        <div class="login-form-item">
+                            <cb-input :prefix="userKey" type="form-input"
+                                      v-model="password"
+                                      placeholder="请输入密码"/>
+                        </div>
+                        <div class="login-form-item">
+                            <button class="form-button"
+                                    @click="login">登录
+                            </button>
+                        </div>
                     </div>
-                    <div class="login-form-item">
-                        <cb-input :prefix="userKey" type="form-input"
-                                  v-model="password"
-                                  placeholder="请输入密码"/>
-                    </div>
-                    <div class="login-form-item">
-                        <button class="form-button"
-                                @click="login">登录
-                        </button>
-                    </div>
-                </div>
+                </template>
             </card>
         </div>
     </div>
@@ -41,6 +45,9 @@
                 password: ""
             };
         },
+        mounted() {
+            document.title = "登录";
+        },
         computed: {
             ...mapGetters([
                 "isLogged"
@@ -51,9 +58,9 @@
                 "set_userStatus"
             ]),
             login: function () {
-                this.set_userStatus(true);
+                // this.set_userStatus(true);
                 this.$router.push({
-                    path: "/workbench"
+                    path: "/home/workbench"
                 });
             }
         }

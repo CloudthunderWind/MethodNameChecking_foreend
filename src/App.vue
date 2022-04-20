@@ -1,19 +1,22 @@
 <template>
-    <a-config-provider :locale="zh_CN">
+    <config-provider :locale="locale">
         <div id="app">
-            <transition name="fade" mode="out-in">
-                <router-view/>
-            </transition>
+            <router-view v-slot="{Component,route}">
+                <transition name="fade" mode="out-in">
+                    <component :is="Component" v-bind="route.params"></component>
+                </transition>
+            </router-view>
         </div>
-    </a-config-provider>
+    </config-provider>
 </template>
 
 <script>
-    import zh_CN from "ant-design-vue/lib/locale-provider/zh_CN";
-    import moment from "moment";
-    import "moment/locale/zh-cn";
+    import zh_CN from "ant-design-vue/es/locale/zh_CN";
+    import dayjs from "dayjs";
+    import "dayjs/locale/zh-cn";
+    import {ConfigProvider} from "ant-design-vue";
 
-    moment.locale("zh-cn");
+    dayjs.locale("zh-cn");
 
     export default {
         name: "App",
@@ -22,15 +25,15 @@
         provide() {
             return {};
         },
-        components: {},
+        components: {
+            ConfigProvider
+        },
         data() {
             return {
-                zh_CN
+                locale: zh_CN
             };
         },
-        methods: {
-            
-        }
+        methods: {}
     };
 </script>
 
@@ -42,4 +45,5 @@
         height: 100%;
         overflow-x: hidden;
     }
+
 </style>
