@@ -1,6 +1,6 @@
 <template>
     <config-provider :locale="locale">
-        <div id="app">
+        <div id="app_x">
             <router-view v-slot="{Component,route}">
                 <transition name="fade" mode="out-in">
                     <component :is="Component" v-bind="route.params"></component>
@@ -40,7 +40,7 @@
 <style scoped>
     @import "assets/styles/wrapper.css";
 
-    #app {
+    #app_x {
         margin: 0;
         height: 100%;
         overflow-x: hidden;

@@ -9,6 +9,17 @@ import VueCookie from "vue-cookies";
 import Antd from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
 
-const app = createApp(App).use(router).use(store).use(VueCookie).use(Antd).use(VueAxios, axios).mount("#app");
+import "highlight.js/styles/atom-one-light.css";
+import "highlight.js/lib/common";
+import hljsVuePlugin from "@highlightjs/vue-plugin";
+
+const app = createApp(App)
+    .use(router)
+    .use(store)
+    .use(VueCookie)
+    .use(Antd)
+    .use(VueAxios, axios)
+    // .use(hljsVuePlugin)
+    .mount("#app");
 
 export default app;

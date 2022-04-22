@@ -58,7 +58,7 @@
                 "set_userStatus"
             ]),
             login: function () {
-                // this.set_userStatus(true);
+                this.set_userStatus(true);
                 this.$router.push({
                     path: "/home/workbench"
                 });

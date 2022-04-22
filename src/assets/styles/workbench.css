@@ -1,10 +1,12 @@
 .workbench-wrapper {
-    min-height: 100%;
-    height: fit-content;
+    min-height: fit-content;
+    height: 100%;
     width: 100%;
+    min-width: 800px;
+    padding: 10px;
 }
 
-.flex-frame {
+.work-frame {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
@@ -15,6 +17,7 @@
     max-height: calc(100% - 32px);
     padding-bottom: 20px;
     scrollbar-width: none;
+    margin-top: 10%;
 }
 
 .record-card {
@@ -27,25 +30,123 @@
     border: none;
     box-shadow: 0 0 3px 3px #eeeeee;
 
-    position: relative;
     box-sizing: border-box;
     margin: 5px 5px 5px 6px;
 
     user-select: none;
 }
 
-.uploader {
+.selector-block {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 80px;
+    flex-flow: column;
 
-    color: #eeeeee;
+    color: #aaaaaa;
     background-color: white;
     cursor: pointer;
+    font-size: 16px;
 }
 
-.uploader:hover {
+.selector-block:hover {
     color: white;
+    background-color: #aaaaaa;
+    box-shadow: 0 0 3px 3px #aaaaaa;
+}
+
+.part-wrapper {
+    display: flex;
+    width: 32%;
+    justify-content: center;
+    align-content: center;
+}
+
+/*上传控件调节*/
+.data-uploader {
+    height: 10rem;
+}
+
+/*历史记录板面*/
+.history-frame {
+    display: flex;
+    flex-wrap: wrap;
+    overflow: auto;
+
+    box-sizing: border-box;
+    padding-bottom: 20px;
+    scrollbar-width: none;
+}
+
+.history-title {
+    font-size: 16px;
+    font-weight: 600;
+    padding: 8px 16px;
+    height: 32px;
+
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.history-title:hover {
     background-color: #eeeeee;
+}
+
+.icon-align {
+    line-height: 14px;
+}
+
+.history-body {
+    width: 100%;
+    min-height: fit-content;
+    margin: 8px;
+
+    padding: 16px 0;
+    border-top: #dae0e5 solid 1px;
+    border-bottom: #dae0e5 solid 1px;
+}
+
+.history-footer {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    margin: 0 8px;
+    height: 22px;
+}
+
+.history-card {
+
+}
+
+.history-card:hover {
+    box-shadow: 0 0 8px 1px #cccccc;
+}
+
+.history-card-title {
+    border-radius: 3px 3px 0 0;
+    background-color: #f6f8fa;
+    padding: 4px 16px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.history-card-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column;
+
+    color: #aaaaaa;
+    background-color: white;
+    cursor: pointer;
+    font-size: 16px;
+    height: 110px;
+}
+
+.history-card-footer {
+    display: flex;
+    justify-content: flex-end;
+    border-radius: 0 0 3px 3px;
+    background-color: #f6f8fa;
+    padding: 4px 16px;
+    height: 30px;
 }

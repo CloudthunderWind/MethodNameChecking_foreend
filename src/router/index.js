@@ -13,13 +13,13 @@ const router = createRouter({
          * @param child 嵌套路由信息
          */
         {
-            path: "/",
+            path: "/login",
             name: "login",
             meta: {},
             component: () => import("../views/login")
         },
         {
-            path: "/home",
+            path: "/",
             name: "home",
             meta: {},
             component: () => import("../views/home"),
