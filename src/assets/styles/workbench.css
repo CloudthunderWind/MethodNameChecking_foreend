@@ -54,6 +54,10 @@
     box-shadow: 0 0 3px 3px #aaaaaa;
 }
 
+.selector-block:hover .icon path {
+    fill: white;
+}
+
 .part-wrapper {
     display: flex;
     width: 32%;
@@ -114,7 +118,7 @@
 }
 
 .history-card {
-
+    cursor: default;
 }
 
 .history-card:hover {
@@ -137,16 +141,20 @@
 
     color: #aaaaaa;
     background-color: white;
-    cursor: pointer;
     font-size: 16px;
     height: 110px;
 }
 
 .history-card-footer {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     border-radius: 0 0 3px 3px;
     background-color: #f6f8fa;
     padding: 4px 16px;
     height: 30px;
+    color: #048fff
+}
+
+.history-card-footer span:hover {
+    cursor: pointer;
 }
