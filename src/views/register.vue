@@ -3,7 +3,7 @@
         <div class="center-block login-size">
             <card bg-color="#f5f7fa" class="login-card">
                 <template v-slot:title>
-                    <div class="login-title">登录</div>
+                    <div class="login-title">注册</div>
                 </template>
                 <template v-slot:body>
                     <div class="login-form">
@@ -18,11 +18,16 @@
                                       placeholder="请输入密码"/>
                         </div>
                         <div class="login-form-item">
+                            <cb-input :prefix="userKey" type="form-input"
+                                      v-model="password_confirm"
+                                      placeholder="请确认密码"/>
+                        </div>
+                        <div class="login-form-item">
                             <button class="form-button"
-                                    @click="login">登录
+                                    @click="register">注册
                             </button>
                         </div>
-                        <router-link to="../register" class="to-link">没有账号？点此注册</router-link>
+                        <router-link to="../login" class="to-link">已有账号？点此登录</router-link>
                     </div>
                 </template>
             </card>
@@ -33,52 +38,35 @@
 <script>
     import Card from "../components/ui/card";
     import CbInput from "../components/ui/cbInput";
-    import {mapActions, mapGetters, mapMutations} from "vuex";
 
     export default {
-        name: "login",
-        components: {CbInput, Card},
+        name: "register",
+        components: {
+            CbInput, Card
+        },
         data() {
             return {
                 userIcon: require("../../public/userIcon.svg"),
                 userKey: require("../../public/key.svg"),
                 userName: "",
-                password: ""
+                password: "",
+                password_confirm: ""
             };
         },
         mounted() {
-            document.title = "登录";
-        },
-        computed: {
-            ...mapGetters([
-                "isLogged"
-            ])
+            document.title = "注册";
         },
         methods: {
-            ...mapMutations([
-                "set_userStatus"
-            ]),
-            ...mapActions([
-                "log_in"
-            ]),
-            login: function () {
-                //TODO 调用登录接口
-                let that = this;
-                // this.log_in({
-                //     username: that.userName,
-                //     password: that.password
-                // }).then(() => {
-                //     that.set_userStatus(true);
-                //     that.$message.success("你好！User");
-                //     that.$router.push({
-                //         path: "/workbench"
-                //     });
-                // });
-                that.set_userStatus(true);
-                that.$message.success("你好！User");
-                that.$router.push({
-                    path: "/workbench"
-                });
+            register() {
+                if (this.password === this.password_confirm) {
+                    //TODO 注册操作
+                    this.$message.success("注册成功");
+                    this.$router.push({
+                        name: "login"
+                    });
+                } else {
+                    this.$message.error("两次输入的密码不一致！");
+                }
             }
         }
     };

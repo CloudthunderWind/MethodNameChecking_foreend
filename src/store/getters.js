@@ -1,5 +1,5 @@
 const getters = {
-    isLogged: state => state.isLogged
+    isLogged: state => state.user.isLogged
 };
 
 export default getters;

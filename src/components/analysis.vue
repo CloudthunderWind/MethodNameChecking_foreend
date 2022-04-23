@@ -1,5 +1,14 @@
 <template>
     <div class="analysis-wrapper">
+        <a-breadcrumb style="padding-left: 8px">
+            <a-breadcrumb-item>
+                <code-outlined/>
+                <router-link to="../workbench">工作台</router-link>
+            </a-breadcrumb-item>
+            <a-breadcrumb-item>
+                <router-link to="../analysis">代码分析报告</router-link>
+            </a-breadcrumb-item>
+        </a-breadcrumb>
         <div class="code-block">
             <div class="code">
                 <div class="code-title"><span>test.java</span></div>
@@ -25,12 +34,13 @@
 
 <script>
     import Prism from "prismjs";
-    import {SettingOutlined} from "@ant-design/icons-vue";
+    import {SettingOutlined, CodeOutlined} from "@ant-design/icons-vue";
 
     export default {
         name: "analysis",
         components: {
-            SettingOutlined
+            SettingOutlined,
+            CodeOutlined
         },
         mounted() {
             Prism.highlightAll();

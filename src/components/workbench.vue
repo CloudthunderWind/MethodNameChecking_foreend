@@ -26,7 +26,7 @@
                         :fileList="upload_file_list"
                         name="java_files"
                         :mulitple="true"
-                        action=""
+                        :action="upload_request"
                         @change=""
                         @drop="">
                     <inbox-outlined style="font-size: 80px;color:#aaaaaa;margin-bottom: 8px"></inbox-outlined>
@@ -100,6 +100,7 @@
             return {
                 upload_visible: false,
                 upload_file_list: [],
+                upload_request: "https://localhost:8081/api/uploadFiles",
                 github_import_visible: false,
                 github_url: "",
                 history_visible: false,

@@ -4,11 +4,16 @@
             <div class="top-bar">
                 <span class="title">函数名分析与推荐在线工具</span>
                 <a-popover trigger="click">
-                    <template #content>
+                    <template #content v-if="isLogged">
                         <div class="user-info">你好！User</div>
-                        <a-button type="primary" danger>退出登录</a-button>
+                        <a-button type="primary" danger @click="logout">退出登录</a-button>
                     </template>
-                    <a-avatar shape="square" style="cursor: pointer">User</a-avatar>
+                    <template #content v-if="!isLogged">
+                        <div class="user-info">你还没有登录哦~</div>
+                        <a-button type="primary" @click="logout">去登录</a-button>
+                    </template>
+                    <a-avatar v-if="isLogged" shape="square" style="cursor: pointer">User</a-avatar>
+                    <a-avatar v-if="!isLogged" shape="square" style="cursor:pointer;">未登录</a-avatar>
                 </a-popover>
             </div>
         </div>
@@ -41,6 +46,7 @@
 
 <script>
     import {CodeSandboxOutlined, CodeOutlined} from "@ant-design/icons-vue";
+    import {mapGetters, mapMutations} from "vuex";
 
     export default {
         name: "home",
@@ -55,10 +61,23 @@
             document.title = "工作台";
             this.$router.push("workbench");
         },
-        computed: {},
+        computed: {
+            ...mapGetters([
+                "isLogged"
+            ])
+        },
         methods: {
+            ...mapMutations([
+                "set_userStatus"
+            ]),
             goToPage(element) {
                 this.$router.push("" + element.key);
+            },
+            logout() {
+                this.set_userStatus(false);
+                this.$router.push({
+                    name: "login"
+                });
             }
         }
     };

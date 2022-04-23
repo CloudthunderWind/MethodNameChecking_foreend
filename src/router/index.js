@@ -19,6 +19,12 @@ const router = createRouter({
             component: () => import("../views/login")
         },
         {
+            path: "/register",
+            name: "register",
+            meta: {},
+            component: () => import("../views/register")
+        },
+        {
             path: "/",
             name: "home",
             meta: {},
@@ -38,7 +44,6 @@ const router = createRouter({
         }
     ]
 });
-
 
 
 export default router;
