@@ -1,4 +1,5 @@
-import {app} from "../main";
+import {createApp} from "vue";
+import App from "../App";
 import axios from "axios";
 import {VueAxios} from "axios";
 import {message, notification} from "ant-design-vue";
@@ -13,7 +14,7 @@ const service = axios.create({
 const err = (error) => {
     if (error.response) {
         const data = error.response.data;
-        const token = app.ls.get("ACCESS_TOKEN");
+        const token = createApp(App).ls.get("ACCESS_TOKEN");
         if (error.response.status === 403) {
             notification.error({
                 message: "Forbidden",

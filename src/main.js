@@ -22,4 +22,6 @@ const app = createApp(App)
     // .use(hljsVuePlugin)
     .mount("#app");
 
-export default app;
+export default {
+    app
+};

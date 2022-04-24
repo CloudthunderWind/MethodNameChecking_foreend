@@ -67,7 +67,7 @@
 
 /*上传控件调节*/
 .data-uploader {
-    height: 10rem;
+    min-height: 10rem;
 }
 
 /*历史记录板面*/

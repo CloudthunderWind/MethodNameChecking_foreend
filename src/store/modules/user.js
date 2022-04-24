@@ -1,4 +1,5 @@
-import {loginByUsernameAPI} from "../../api/userAPI";
+import {message} from "ant-design-vue";
+import {loginByUsernameAPI, registerAPI} from "../../api/userAPI";
 
 const user = {
     state: {
@@ -19,6 +20,14 @@ const user = {
         }
     },
     actions: {
+        register: async function ({commit}, user_info) {
+            const res = await registerAPI(user_info);
+            if (res.isSuccess) {
+                message.success("注册成功");
+            } else {
+                message.error("注册失败")
+            }
+        },
         log_in: async function ({commit}, user_info) {
             const res = await loginByUsernameAPI(user_info);
             if (!res) {

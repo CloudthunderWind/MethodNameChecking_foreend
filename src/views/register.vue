@@ -24,7 +24,7 @@
                         </div>
                         <div class="login-form-item">
                             <button class="form-button"
-                                    @click="register">注册
+                                    @click="do_register">注册
                             </button>
                         </div>
                         <router-link to="../login" class="to-link">已有账号？点此登录</router-link>
@@ -38,6 +38,7 @@
 <script>
     import Card from "../components/ui/card";
     import CbInput from "../components/ui/cbInput";
+    import {mapActions} from "vuex";
 
     export default {
         name: "register",
@@ -57,11 +58,22 @@
             document.title = "注册";
         },
         methods: {
-            register() {
+            ...mapActions([
+                "register"
+            ]),
+            do_register() {
                 if (this.password === this.password_confirm) {
                     //TODO 注册操作
-                    this.$message.success("注册成功");
-                    this.$router.push({
+                    let that = this;
+                    // this.register({
+                    //     username: this.userName,
+                    //     password: this.password
+                    // }).then(() => {
+                    //     that.$router.push({
+                    //         name: "login"
+                    //     });
+                    // });
+                    that.$router.push({
                         name: "login"
                     });
                 } else {

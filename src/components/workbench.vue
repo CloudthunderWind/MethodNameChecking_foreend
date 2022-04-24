@@ -38,12 +38,12 @@
             </template>
             <div class="data-uploader">
                 <a-upload-dragger
-                        :fileList="upload_file_list"
+                        v-model:file-list="upload_file_list"
                         name="java_files"
                         :mulitple="true"
-                        :action="upload_request"
-                        @change=""
-                        @drop="">
+                        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                        @change="add_file"
+                        @drop="drop_file">
                     <inbox-outlined style="font-size: 80px;color:#aaaaaa;margin-bottom: 8px"></inbox-outlined>
                     <div>点击或拖动文件到此处以进行上传</div>
                 </a-upload-dragger>
@@ -93,19 +93,19 @@
             </div>
             <div class="history-body">
                 <div v-for="(file) in history_list" class="record-card history-card"
-                     :data-id="'history-record'+file.id">
+                     :data-id="file.id">
                     <div class="history-card-title">{{file.name}}</div>
                     <div class="history-card-body">
                         <span>{{file.content}}</span>
                     </div>
                     <div class="history-card-footer">
-                        <span :data-id="'record-id'+file.id" @click="find_details">查看</span>
-                        <span :data-id="'record-id'+file.id" @click="delete_history">删除记录</span>
+                        <span :data-id="file.id" @click="find_details">查看</span>
+                        <span :data-id="file.id" @click="delete_history">删除</span>
                     </div>
                 </div>
             </div>
             <div class="history-footer">
-                <span>当前共 1 条历史，最多可存储 30 条历史</span>
+                <span>当前共 {{history_list.length}} 条历史，最多可存储 30 条历史</span>
             </div>
         </div>
     </div>
@@ -120,6 +120,7 @@
         ArrowLeftOutlined
     } from "@ant-design/icons-vue";
     import {mapActions, mapGetters} from "vuex";
+    import {message} from "ant-design-vue";
 
     export default {
         name: "workbench",
@@ -135,7 +136,8 @@
             return {
                 upload_visible: false,
                 upload_file_list: [],
-                upload_request: "https://localhost:8081/api/uploadFiles",
+                // upload_request: "https://localhost:8080/file/uploadZip",
+                upload_request: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
                 gitee_import_visible: false,
                 gitee_url: "",
                 history_visible: false,
@@ -147,7 +149,12 @@
             ])
         },
         methods: {
-            ...mapActions([]),
+            ...mapActions([
+                "upload_file",
+                "import_from_git",
+                "search_by_record_id"
+            ]),
+            // 上传文件方法
             open_upload_dialog() {
                 this.upload_visible = true;
             },
@@ -155,7 +162,25 @@
                 this.upload_visible = false;
             },
             submitUploadFileList() {
+                let that = this;
+                // this.upload_file(this.fileList).then(() => {
+                //     that.upload_visible = false;
+                // });
                 this.upload_visible = false;
+            },
+            add_file(info) {
+                const status = info.file.status;
+                if (status !== "uploading") {
+                    console.log(info.file, info.fileList);
+                }
+                if (status === "done") {
+                    message.success(`${info.file.name} file uploaded successfully.`);
+                } else if (status === "error") {
+                    message.error(`${info.file.name} file upload failed.`);
+                }
+            },
+            drop_file(e) {
+                console.log(e);
             },
             //从github导入方法
             open_github_import_dialog() {
@@ -165,6 +190,10 @@
                 this.gitee_import_visible = false;
             },
             submitURL() {
+                let that = this;
+                this.upload_file(this.fileList).then(() => {
+                    that.upload_visible = false;
+                });
                 this.gitee_import_visible = false;
             },
             //历史记录方法
@@ -174,11 +203,19 @@
             close_history_dialog() {
                 this.history_visible = false;
             },
-            find_details() {
+            find_details(e) {
+                let that = this;
+                this.search_by_record_id(e.target.getAttribute("data-id")).then((data) => {
+                    that.$router.push({
+                        path: "/analysis",
+                        params: data
+                    });
+                });
                 this.$router.push({
                     path: "/analysis"
                 });
             },
+            // TODO 从这里开始
             delete_history(e) {
                 console.log(e.target.getAttribute("data-id"));
             }
