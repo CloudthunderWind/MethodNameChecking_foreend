@@ -8,7 +8,7 @@ import router from "../router";
 
 const service = axios.create({
     baseURL: process.env.NODE_ENV === "production" ? "" : "http://localhost:8088",
-    withCredentials: true
+    // withCredentials: true
 });
 
 const err = (error) => {
@@ -54,10 +54,10 @@ service.interceptors.request.use((config) => {
 service.interceptors.response.use((response) => {
     switch (response.status) {
         case 200:
-            if (response.data.success && response.data.success) {
-                return response.data.content;
+            if (response.data.isSuccess && response.data.isSuccess) {
+                return response.data;
             }
-            message.error(response.data.message);
+            message.error(response.data.msg);
             break;
         case 404:
             return false;
@@ -66,7 +66,7 @@ service.interceptors.response.use((response) => {
             router.push("/login");
             break;
         default:
-            message.error(response.data.message);
+            message.error(response.data.msg);
     }
 });
 

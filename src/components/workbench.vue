@@ -25,7 +25,9 @@
             </template>
             <a-form name="github_url_register">
                 <a-form-item label="Https Gitee URL:">
-                    <a-input :value="gitee_url"></a-input>
+                    <label>
+                        <input class="cb-input" v-model="gitee_url"/>
+                    </label>
                 </a-form-item>
             </a-form>
         </a-modal>
@@ -39,9 +41,10 @@
             <div class="data-uploader">
                 <a-upload-dragger
                         v-model:file-list="upload_file_list"
-                        name="java_files"
+                        name="file"
+                        :data="{'username':user_name}"
                         :mulitple="true"
-                        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                        action="http://localhost:8088/file/uploadZip"
                         @change="add_file"
                         @drop="drop_file">
                     <inbox-outlined style="font-size: 80px;color:#aaaaaa;margin-bottom: 8px"></inbox-outlined>
@@ -78,14 +81,14 @@
                 </div>
             </div>
             <div class="part-wrapper">
-                <div class="record-card selector-block" @click="open_history_dialog">
+                <div class="record-card selector-block" @click="open_history_block">
                     <history-outlined style="font-size: 80px;"/>
                     <span>查看历史</span>
                 </div>
             </div>
         </div>
         <div v-if="history_visible" class="history-frame">
-            <div class="history-title" @click="close_history_dialog">
+            <div class="history-title" @click="close_history_block">
                 <div class="icon-align">
                     <arrow-left-outlined style="font-size: 14px;color:#1890ff;margin-right: 8px"/>
                     历史记录
@@ -94,9 +97,9 @@
             <div class="history-body">
                 <div v-for="(file) in history_list" class="record-card history-card"
                      :data-id="file.id">
-                    <div class="history-card-title">{{file.name}}</div>
+                    <div class="history-card-title">{{file.filename}}</div>
                     <div class="history-card-body">
-                        <span>{{file.content}}</span>
+                        <span>暂无预览</span>
                     </div>
                     <div class="history-card-footer">
                         <span :data-id="file.id" @click="find_details">查看</span>
@@ -119,8 +122,10 @@
         InboxOutlined,
         ArrowLeftOutlined
     } from "@ant-design/icons-vue";
-    import {mapActions, mapGetters} from "vuex";
-    import {message} from "ant-design-vue";
+    import {mapActions, mapGetters, mapMutations} from "vuex";
+    import {message, Modal} from "ant-design-vue";
+    import {ref} from "vue";
+    import {toRaw} from "@vue/reactivity";
 
     export default {
         name: "workbench",
@@ -136,23 +141,38 @@
             return {
                 upload_visible: false,
                 upload_file_list: [],
-                // upload_request: "https://localhost:8080/file/uploadZip",
-                upload_request: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
+                upload_request: "https://localhost:8080/file/uploadZip",
+                // upload_request: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
                 gitee_import_visible: false,
                 gitee_url: "",
                 history_visible: false,
             };
         },
+        async mounted() {
+            await this.search_by_user_name(this.user_name);
+        },
         computed: {
             ...mapGetters([
-                "history_list"
+                "user_name",
+                "history_list",
+                "file_to_demonstrate",
+                "file_to_demonstrate_paths"
             ])
         },
         methods: {
+            ...mapMutations([
+                "set_current_path",
+                "set_current_name",
+                "set_file_type"
+            ]),
             ...mapActions([
                 "upload_file",
                 "import_from_git",
-                "search_by_record_id"
+                "search_by_user_name",
+                "search_by_record_id",
+                "delete_record",
+                "get_file_content",
+                "get_dir_path"
             ]),
             // 上传文件方法
             open_upload_dialog() {
@@ -161,12 +181,15 @@
             close_upload_dialog() {
                 this.upload_visible = false;
             },
+            before_upload(file) {
+                console.log("1");
+                this.upload_file_list = [file, ...this.upload_file_list];
+                return false;
+            },
             submitUploadFileList() {
                 let that = this;
-                // this.upload_file(this.fileList).then(() => {
-                //     that.upload_visible = false;
-                // });
-                this.upload_visible = false;
+                that.upload_visible = false;
+                // this.upload_visible = false;
             },
             add_file(info) {
                 const status = info.file.status;
@@ -174,9 +197,9 @@
                     console.log(info.file, info.fileList);
                 }
                 if (status === "done") {
-                    message.success(`${info.file.name} file uploaded successfully.`);
+                    message.success(`${info.file.name} 上传成功。`);
                 } else if (status === "error") {
-                    message.error(`${info.file.name} file upload failed.`);
+                    message.error(`${info.file.name} 上传失败。`);
                 }
             },
             drop_file(e) {
@@ -191,38 +214,65 @@
             },
             submitURL() {
                 let that = this;
-                this.upload_file(this.fileList).then(() => {
+                this.import_from_git({
+                    url: this.gitee_url,
+                    username: this.user_name
+                }).then(() => {
                     that.upload_visible = false;
                 });
                 this.gitee_import_visible = false;
             },
             //历史记录方法
-            open_history_dialog() {
-                this.history_visible = true;
+            open_history_block() {
+                let that = this;
+                this.search_by_user_name(this.user_name).then(() => {
+                    this.history_visible = true;
+                });
+                // this.history_visible = true;
             },
-            close_history_dialog() {
+            close_history_block() {
                 this.history_visible = false;
             },
             find_details(e) {
                 let that = this;
-                this.search_by_record_id(e.target.getAttribute("data-id")).then((data) => {
+                this.search_by_record_id(e.target.getAttribute("data-id")).then(() => {
+                    if (that.file_to_demonstrate.filepath.indexOf(".") !== -1) {
+                        that.set_file_type(true);
+                        that.get_file_content(that.file_to_demonstrate.filepath);
+                    } else {
+                        that.set_file_type(false);
+                    }
+                    that.get_dir_path(that.file_to_demonstrate.filepath);
+                }).then(() => {
+                    that.set_current_path(that.file_to_demonstrate.filepath);
+                    that.set_current_name(that.file_to_demonstrate.filename.split("/").splice(-1)[0]);
                     that.$router.push({
                         path: "/analysis",
-                        params: data
                     });
                 });
-                this.$router.push({
-                    path: "/analysis"
+                localStorage.setItem("latest_record_id", this.file_to_demonstrate.id);
+                // this.$router.push({
+                //     path: "/analysis"
+                // });
+            },
+            delete_history(e) {
+                let that = this;
+                Modal.confirm({
+                    title: "提示",
+                    closable: true,
+                    content: "你确定要删除该记录吗？",
+                    onOk: () => {
+                        that.delete_record(e.target.getAttribute("data-id")).then(() => {
+                            that.search_by_user_name(this.user_name);
+                        });
+                    }
                 });
             },
-            // TODO 从这里开始
-            delete_history(e) {
-                console.log(e.target.getAttribute("data-id"));
-            }
         }
     };
 </script>
 
 <style scoped>
     @import "../assets/styles/workbench.css";
+    @import "../assets/styles/cbInput.css";
 </style>

@@ -1,0 +1,23 @@
+.cb-input {
+    height: 2.2rem;
+    font-size: 0.8rem;
+    color: black;
+    font-family: sans-serif;
+    padding: 0 0.6rem;
+    box-sizing: border-box;
+    vertical-align: middle;
+    width: 100%;
+
+    outline: none;
+    border-radius: 3px;
+    border: #e2e2e2 solid 1px;
+}
+
+.cb-input:hover {
+    border-color: #40a9ff;
+}
+
+.cb-input:focus {
+    border-color: #40a9ff;
+    box-shadow: 0 0 1px 2px #d1e9ff;
+}

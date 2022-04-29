@@ -8,19 +8,27 @@
                 <template v-slot:body>
                     <div class="login-form">
                         <div class="login-form-item">
-                            <cb-input :prefix="userIcon" type="form-input"
-                                      v-model="userName"
-                                      placeholder="请输入用户名"/>
+                            <label>
+                                <input class="cb-input"
+                                       v-model="userName"
+                                       placeholder="请输入用户名"/>
+                            </label>
                         </div>
                         <div class="login-form-item">
-                            <cb-input :prefix="userKey" type="form-input"
-                                      v-model="password"
-                                      placeholder="请输入密码"/>
+                            <label>
+                                <input class="cb-input"
+                                       type="password"
+                                       v-model="password"
+                                       placeholder="请输入密码"/>
+                            </label>
                         </div>
                         <div class="login-form-item">
-                            <cb-input :prefix="userKey" type="form-input"
-                                      v-model="password_confirm"
-                                      placeholder="请确认密码"/>
+                            <label>
+                                <input class="cb-input"
+                                       type="password"
+                                       v-model="password_confirm"
+                                       placeholder="请确认密码"/>
+                            </label>
                         </div>
                         <div class="login-form-item">
                             <button class="form-button"
@@ -63,19 +71,18 @@
             ]),
             do_register() {
                 if (this.password === this.password_confirm) {
-                    //TODO 注册操作
                     let that = this;
-                    // this.register({
-                    //     username: this.userName,
-                    //     password: this.password
-                    // }).then(() => {
-                    //     that.$router.push({
-                    //         name: "login"
-                    //     });
-                    // });
-                    that.$router.push({
-                        name: "login"
+                    this.register({
+                        username: that.userName,
+                        password: that.password
+                    }).then(() => {
+                        that.$router.push({
+                            name: "login"
+                        });
                     });
+                    // that.$router.push({
+                    //     name: "login"
+                    // });
                 } else {
                     this.$message.error("两次输入的密码不一致！");
                 }
@@ -87,5 +94,5 @@
 <style scoped>
     @import "../../src/assets/styles/wrapper.css";
     @import "../../src/assets/styles/login.css";
-
+    @import "../../src/assets/styles/cbInput.css";
 </style>

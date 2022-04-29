@@ -78,23 +78,24 @@
 .login-form-item {
     height: 3.8rem;
     text-align: center;
+    padding: 0 15%;
 }
 
 .form-button {
     height: 2rem;
-    width: 70%;
+    width: 100%;
     font-size: 1rem;
     letter-spacing: 0.2rem;
     cursor: pointer;
 
     border-radius: 5px;
     outline: none;
-    border: 1px solid rgba(0, 0, 0, 0.4);
-    background-color: rgb(239, 239, 239);
+    border: 1px solid #dae0e5;
+    background-color: #f6f8fa;
 }
 
 .form-button:hover {
-    background-color: rgb(225, 225, 225);
+    background-color: #f0f5f5;
 }
 
 .prefix-ico {

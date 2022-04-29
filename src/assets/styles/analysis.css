@@ -3,6 +3,7 @@
     height: fit-content;
     width: 100%;
     padding: 10px 24px;
+    overflow: auto;
 }
 
 /*显示源码的样式*/
@@ -23,7 +24,7 @@
     min-width: fit-content;
     height: fit-content;
     font-size: 12px;
-    width: 65%;
+    width: 100%;
     border-radius: 5px;
     background-color: #f6f8fa;
 
@@ -41,6 +42,72 @@
 .code-body {
     border: 0;
     border-radius: 0 0 5px 5px;
+}
+
+
+/*显示项目目录的样式*/
+.project-block {
+    width: 65%;
+    height: fit-content;
+    min-width: fit-content;
+    display: flex;
+    flex-flow: column;
+}
+
+.directory {
+    height: fit-content;
+    min-width: fit-content;
+
+    width: 100%;
+    background-color: #f6f8fa;
+    border-radius: 5px;
+    border: #dae0e5 solid 1px;
+    margin-bottom: 16px;
+}
+
+.directory-title {
+    display: flex;
+    padding: 6px 16px;
+}
+
+.directory-title-info {
+    display: inline-block;
+    position: relative;
+    width: calc(100% - 32px);
+    line-height: 14px;
+}
+
+.directory-title-info div {
+    position: absolute;
+    bottom: 4px;
+    left: 12px;
+    font-size: 14px;
+}
+
+.directory-title-info div:hover {
+    color: #0969da;
+    text-decoration: underline;
+    text-underline: #0969da;
+    cursor: pointer;
+}
+
+.directory-body {
+    border: 0;
+    background-color: white;
+    border-radius: 0 0 5px 5px;
+}
+
+.directory-body-item {
+    border-top: #dae0e5 solid 1px;
+    line-height: 36px;
+    height: 36px;
+    padding: 0 20px;
+}
+
+.directory-body-item:hover {
+    background-color: #f6f8fa;
+    color: #0969da;
+    cursor: pointer;
 }
 
 /*推荐代码名部分的样式*/

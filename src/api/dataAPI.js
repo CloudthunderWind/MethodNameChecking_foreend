@@ -16,26 +16,23 @@ export function addHistoryRecordAPI(data) {
 // 用户名查询所有历史记录,data为username
 export function searchByUserNameAPI(data) {
     return axios({
-        url: `${api.data_api}/nameSearch`,
+        url: `${api.data_api}/nameSearch?username=${data}`,
         type: "GET",
-        data
     });
 }
 
 // 用记录id查询记录,data为record-id
 export function searchByRecordIdAPI(data) {
     return axios({
-        url: `${api.data_api}/idSearch`,
-        type: "GET",
-        data
+        url: `${api.data_api}/idSearch?id=${data}`,
+        type: "GET"
     });
 }
 
 // 删除一条记录，data为record-id
 export function deleteRecordAPI(data) {
     return axios({
-        url: `${api.data_api}/delete`,
-        type: "POST",
-        data
+        url: `${api.data_api}/delete?id=${data}`,
+        type: "GET"
     });
 }

@@ -8,14 +8,19 @@
                 <template v-slot:body>
                     <div class="login-form">
                         <div class="login-form-item">
-                            <cb-input :prefix="userIcon" type="form-input"
-                                      v-model="userName"
-                                      placeholder="请输入用户名"/>
+                            <label>
+                                <input class="cb-input"
+                                       v-model="userName"
+                                       placeholder="请输入用户名"/>
+                            </label>
                         </div>
                         <div class="login-form-item">
-                            <cb-input :prefix="userKey" type="form-input"
-                                      v-model="password"
-                                      placeholder="请输入密码"/>
+                            <label>
+                                <input class="cb-input"
+                                       type="password"
+                                       v-model="password"
+                                       placeholder="请输入密码"/>
+                            </label>
                         </div>
                         <div class="login-form-item">
                             <button class="form-button"
@@ -51,7 +56,8 @@
         },
         computed: {
             ...mapGetters([
-                "isLogged"
+                "isLogged",
+                "user_name"
             ])
         },
         methods: {
@@ -64,18 +70,16 @@
             login: function () {
                 //TODO 调用登录接口
                 let that = this;
-                // this.log_in({
-                //     username: that.userName,
-                //     password: that.password
-                // }).then(() => {
-                //     that.set_userStatus(true);
-                //     that.$message.success("你好！User");
-                //     that.$router.push({
-                //         path: "/workbench"
-                //     });
-                // });
-                that.set_userStatus(true);
-                that.$message.success("你好！User");
+                this.log_in({
+                    username: that.userName,
+                    password: that.password
+                }).then(() => {
+                    that.$router.push({
+                        path: "/workbench"
+                    });
+                });
+                // that.set_userStatus(true);
+                // that.$message.success("你好！User");
                 that.$router.push({
                     path: "/workbench"
                 });
@@ -87,5 +91,5 @@
 <style scoped>
     @import "../../src/assets/styles/wrapper.css";
     @import "../../src/assets/styles/login.css";
-
+    @import "../../src/assets/styles/cbInput.css";
 </style>
