@@ -95,6 +95,7 @@
                 </div>
             </div>
             <div class="history-body">
+                <a-spin class="history-spinning" v-if="isSpinning"/>
                 <div v-for="(file) in history_list" class="record-card history-card"
                      :data-id="file.id">
                     <div class="history-card-title">{{file.filename}}</div>
@@ -142,10 +143,10 @@
                 upload_visible: false,
                 upload_file_list: [],
                 upload_request: "https://localhost:8080/file/uploadZip",
-                // upload_request: "https://www.mocky.io/v2/5cc8019d300000980a055e76",
                 gitee_import_visible: false,
                 gitee_url: "",
                 history_visible: false,
+                isSpinning: false
             };
         },
         async mounted() {
@@ -170,6 +171,8 @@
                 "import_from_git",
                 "search_by_user_name",
                 "search_by_record_id",
+                "get_recommend_by_filepath",
+                "get_param_recommend_by_filepath",
                 "delete_record",
                 "get_file_content",
                 "get_dir_path"
@@ -235,7 +238,9 @@
             },
             find_details(e) {
                 let that = this;
-                this.search_by_record_id(e.target.getAttribute("data-id")).then(() => {
+                let id = e.target.getAttribute("data-id");
+                this.search_by_record_id(id).then(() => {
+                    that.isSpinning = true;
                     if (that.file_to_demonstrate.filepath.indexOf(".") !== -1) {
                         that.set_file_type(true);
                         that.get_file_content(that.file_to_demonstrate.filepath);
@@ -243,9 +248,12 @@
                         that.set_file_type(false);
                     }
                     that.get_dir_path(that.file_to_demonstrate.filepath);
+                    // that.get_recommend_by_filepath(that.file_to_demonstrate.filepath);
+
                 }).then(() => {
                     that.set_current_path(that.file_to_demonstrate.filepath);
                     that.set_current_name(that.file_to_demonstrate.filename.split("/").splice(-1)[0]);
+                    that.isSpinning = false;
                     that.$router.push({
                         path: "/analysis",
                     });

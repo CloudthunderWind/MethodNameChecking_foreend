@@ -76,7 +76,6 @@
     flex-wrap: wrap;
     overflow: auto;
 
-    box-sizing: border-box;
     padding-bottom: 20px;
     scrollbar-width: none;
 }
@@ -100,6 +99,7 @@
 }
 
 .history-body {
+    position: relative;
     display: flex;
     width: 100%;
     min-height: fit-content;
@@ -108,6 +108,19 @@
     padding: 16px 0;
     border-top: #dae0e5 solid 1px;
     border-bottom: #dae0e5 solid 1px;
+}
+
+.history-spinning {
+    position: absolute;
+    width: 100%;
+    height: calc(100% - 32px);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 5px;
 }
 
 .history-footer {

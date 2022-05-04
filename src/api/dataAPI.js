@@ -29,6 +29,22 @@ export function searchByRecordIdAPI(data) {
     });
 }
 
+// 用记录id查询推荐
+export function getRecommendByFilepathAPI(data) {
+    return axios({
+        url: `${api.data_api}/gtnm?filepath=${data}`,
+        type: "GET"
+    });
+}
+
+// 用记录id查询参数推荐
+export function getParamRecommendByFilepathAPI(data) {
+    return axios({
+        url: `${api.data_api}/paramRecommend?filepath=${data}`,
+        type: "GET"
+    });
+}
+
 // 删除一条记录，data为record-id
 export function deleteRecordAPI(data) {
     return axios({

@@ -6,9 +6,6 @@
                 <router-link to="../workbench">工作台</router-link>
             </a-breadcrumb-item>
             <a-breadcrumb-item>
-                <router-link to="../analysis">代码分析报告</router-link>
-            </a-breadcrumb-item>
-            <a-breadcrumb-item>
                 <a>{{file_to_demonstrate.filename}}</a>
             </a-breadcrumb-item>
         </a-breadcrumb>
@@ -57,13 +54,15 @@
                     <setting-outlined class="prefix-icon"/>
                     <span>推荐信息</span>
                 </div>
-                <div class="recommend-body">
+                <div v-for="info in param_recommend_infos" class="recommend-body">
                     <div>
-                        <a class="target-name">test</a>
-                        <span class="target-location">On loc 1</span>
+                        <a class="target-name">{{info.method_name+info.param_name===""?":"+info.param:""}}</a>
+                        <span class="target-location">On loc {{info.method_location}}</span>
                     </div>
-                    <div class="recommend-name">The method name should be better with "Test".</div>
-                    <div class="recommend-link"><a>Use it</a></div>
+                    <div class="recommend-name" v-for="(recommend) in info.possible_recommends">
+                        The method name should be better with "<a>{{recommend}}</a>".
+                    </div>
+                    <!--                    <div class="recommend-link"><a>Use it</a></div>-->
                 </div>
             </div>
         </div>
@@ -105,7 +104,9 @@
                 "file_content",
                 "file_type",
                 "current_path",
-                "current_name"
+                "current_name",
+                "recommend_infos",
+                "param_recommend_infos"
             ])
         },
         data() {
@@ -130,6 +131,8 @@
                     that.get_file_content(link).then(() => {
                         Prism.highlightAll();
                     });
+                    that.get_param_recommend_by_filepath(link);
+                    that.get_recommend_by_filepath(link);
                     that.set_current_name(link.split("/").slice(-1)[0]);
                     that.set_file_type(true);
                 } else {

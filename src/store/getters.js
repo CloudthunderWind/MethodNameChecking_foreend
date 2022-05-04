@@ -8,7 +8,9 @@ const getters = {
     file_content: state => state.data.file_content,
     file_type: state => state.data.file_type,
     current_path: state => state.data.current_path,
-    current_name: state => state.data.current_name
+    current_name: state => state.data.current_name,
+    recommend_infos: state => state.data.recommend_infos,
+    param_recommend_infos: state => state.data.param_recommend_infos
 };
 
 export default getters;

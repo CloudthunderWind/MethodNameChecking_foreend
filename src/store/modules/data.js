@@ -1,6 +1,12 @@
 import {getFileContentAPI, getFileDirectoryAPI, importFromGitAPI, uploadFileAPI} from "@/api/fileAPI";
 import {message} from "ant-design-vue";
-import {deleteRecordAPI, searchByRecordIdAPI, searchByUserNameAPI} from "@/api/dataAPI";
+import {
+    deleteRecordAPI,
+    getParamRecommendByFilepathAPI,
+    getRecommendByFilepathAPI,
+    searchByRecordIdAPI,
+    searchByUserNameAPI
+} from "@/api/dataAPI";
 
 const data = {
     state: {
@@ -17,6 +23,15 @@ const data = {
             dirs: ["nil folder"],
             files: ["test.java"],
         },
+        recommend_infos: [],
+        param_recommend_infos: [
+            {
+                param_name: "test",
+                method_name: "test",
+                method_location: "1",
+                possible_recommends: ["test"]
+            }
+        ]
     },
     mutations: {
         set_file_to_demonstrate(state, file) {
@@ -37,6 +52,12 @@ const data = {
         set_file_type(state, type) {
             state.file_type = type;
         },
+        set_recommend_infos(state, infos) {
+            state.recommend_infos = infos;
+        },
+        set_param_recommend_infos(state, infos) {
+            state.param_recommend_infos = infos;
+        }
     },
     actions: {
         upload_file: async function ({commit}, file_info) {
@@ -50,7 +71,7 @@ const data = {
         import_from_git: async function ({commit}, url_info) {
             const res = await importFromGitAPI(url_info);
             if (res.isSuccess) {
-                message.success("导入成功");
+                message.success("导入成功，可在历史记录中进行查看");
                 commit("set_userName", res.data.username);
                 commit("set_userId", res.data.id);
                 commit("add_to_history_list", res.data);
@@ -72,6 +93,22 @@ const data = {
                 commit("set_file_to_demonstrate", res.data);
             } else {
                 message.error("查询失败");
+            }
+        },
+        get_recommend_by_filepath: async function ({commit}, filepath) {
+            const res = await getRecommendByFilepathAPI(filepath);
+            if (res.isSuccess) {
+                commit("set_recommend_infos", res.data);
+            } else {
+                message.error("推荐信息获取失败");
+            }
+        },
+        get_param_recommend_by_filepath: async function ({commit}, filepath) {
+            const res = await getParamRecommendByFilepathAPI(filepath);
+            if (res.isSuccess) {
+                commit("set_param_recommend_infos", res.data);
+            } else {
+                message.error("推荐信息获取失败");
             }
         },
         delete_record: async function ({commit}, record_id) {
