@@ -18,20 +18,20 @@
             </div>
         </div>
         <div class="flex-content-wrapper">
-            <div class="menu-wrapper">
-                <a-menu mode="inline"
-                        class="bench-menu"
-                        @select="goToPage">
-                    <a-menu-item key="/workbench">
-                        <code-outlined/>
-                        <span>工作台</span>
-                    </a-menu-item>
-                    <a-menu-item key="/analysis">
-                        <code-sandbox-outlined/>
-                        <span>代码分析报告</span>
-                    </a-menu-item>
-                </a-menu>
-            </div>
+<!--            <div class="menu-wrapper">-->
+<!--                <a-menu mode="inline"-->
+<!--                        class="bench-menu"-->
+<!--                        @select="goToPage">-->
+<!--                    <a-menu-item key="/workbench">-->
+<!--                        <code-outlined/>-->
+<!--                        <span>工作台</span>-->
+<!--                    </a-menu-item>-->
+<!--                    <a-menu-item key="/analysis">-->
+<!--                        <code-sandbox-outlined/>-->
+<!--                        <span>代码分析报告</span>-->
+<!--                    </a-menu-item>-->
+<!--                </a-menu>-->
+<!--            </div>-->
             <div class="bench-wrapper">
                 <router-view v-slot="{Component,route}">
                     <keep-alive>

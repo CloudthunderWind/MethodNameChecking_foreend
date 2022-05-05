@@ -43,7 +43,6 @@
     #app_x {
         margin: 0;
         height: 100%;
-        overflow-x: hidden;
     }
 
 </style>

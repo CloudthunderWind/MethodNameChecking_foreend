@@ -1,9 +1,13 @@
-import {getFileContentAPI, getFileDirectoryAPI, importFromGitAPI, uploadFileAPI} from "@/api/fileAPI";
+import {
+    getFileContentAPI,
+    getFileDirectoryAPI, getParamRecommendByFilepathAPI,
+    getRecommendByFilepathAPI,
+    importFromGitAPI,
+    uploadFileAPI
+} from "@/api/fileAPI";
 import {message} from "ant-design-vue";
 import {
     deleteRecordAPI,
-    getParamRecommendByFilepathAPI,
-    getRecommendByFilepathAPI,
     searchByRecordIdAPI,
     searchByUserNameAPI
 } from "@/api/dataAPI";
@@ -23,14 +27,19 @@ const data = {
             dirs: ["nil folder"],
             files: ["test.java"],
         },
-        recommend_infos: [],
-        param_recommend_infos: [
+        recommend_infos: [
             {
-                param_name: "test",
                 method_name: "test",
-                method_location: "1",
-                possible_recommends: ["test"]
+                possible_recommend: "test"
             }
+        ],
+        param_recommend_infos: [
+            // {
+            //     param_name: "test",
+            //     method_name: "test",
+            //     method_location: "1",
+            //     possible_recommends: ["test"]
+            // }
         ]
     },
     mutations: {
@@ -106,7 +115,11 @@ const data = {
         get_param_recommend_by_filepath: async function ({commit}, filepath) {
             const res = await getParamRecommendByFilepathAPI(filepath);
             if (res.isSuccess) {
-                commit("set_param_recommend_infos", res.data);
+                if (!res.data) {
+                    commit("set_param_recommend_infos", []);
+                } else {
+                    commit("set_param_recommend_infos", res.data);
+                }
             } else {
                 message.error("推荐信息获取失败");
             }

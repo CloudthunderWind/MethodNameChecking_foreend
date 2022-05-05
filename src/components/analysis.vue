@@ -1,5 +1,6 @@
 <template>
     <div class="analysis-wrapper">
+        <a-spin class="analysis-spinning" v-if="isSpinning"/>
         <a-breadcrumb style="padding-left: 8px">
             <a-breadcrumb-item>
                 <code-outlined/>
@@ -54,15 +55,25 @@
                     <setting-outlined class="prefix-icon"/>
                     <span>推荐信息</span>
                 </div>
+                <div v-if="(param_recommend_infos.length+recommend_infos.length)<1" class="recommend-body">
+                    <div class="target-name">No recommendation.</div>
+                </div>
+                <div v-for="info in recommend_infos" class="recommend-body">
+                    <div>
+                        <a class="target-name">{{"MethodName:"+info.method_name}}</a>
+                    </div>
+                    <div class="recommend-name">
+                        The method name may be better with "<a>{{info.possible_recommend}}</a>
+                    </div>
+                </div>
                 <div v-for="info in param_recommend_infos" class="recommend-body">
                     <div>
-                        <a class="target-name">{{info.method_name+info.param_name===""?":"+info.param:""}}</a>
+                        <a class="target-name">{{"MethodName:"+info.method_name+(info.param_name?"-->ParamName:"+info.param_name:"")}}</a>
                         <span class="target-location">On loc {{info.method_location}}</span>
                     </div>
                     <div class="recommend-name" v-for="(recommend) in info.possible_recommends">
-                        The method name should be better with "<a>{{recommend}}</a>".
+                        The param name may be better with "<a>{{recommend}}</a>".
                     </div>
-                    <!--                    <div class="recommend-link"><a>Use it</a></div>-->
                 </div>
             </div>
         </div>
@@ -110,33 +121,44 @@
             ])
         },
         data() {
-            return {};
+            return {
+                isSpinning: false,
+            };
         },
         methods: {
             ...mapMutations([
                 "set_file_type",
                 "set_current_path",
-                "set_current_name"
+                "set_current_name",
             ]),
             ...mapActions([
                 "search_by_record_id",
                 "get_file_content",
-                "get_dir_path"
+                "get_dir_path",
+                "get_param_recommend_by_filepath",
+                "get_recommend_by_filepath"
             ]),
-            linkToPath(e) {
+            async linkToPath(e) {
                 let that = this;
                 let link = e.target.getAttribute("data-link");
+                this.isSpinning = true;
                 this.set_current_path(link);
                 if (link.indexOf(".") !== -1) {
                     that.get_file_content(link).then(() => {
                         Prism.highlightAll();
+                        that.get_param_recommend_by_filepath(link).then(() => {
+                            that.get_recommend_by_filepath(link).then(() => {
+                                that.$message.success("推荐获取成功");
+                                that.isSpinning = false;
+                            });
+                        });
+                        that.set_current_name(link.split("/").slice(-1)[0]);
                     });
-                    that.get_param_recommend_by_filepath(link);
-                    that.get_recommend_by_filepath(link);
-                    that.set_current_name(link.split("/").slice(-1)[0]);
                     that.set_file_type(true);
                 } else {
-                    this.get_dir_path(link);
+                    that.get_dir_path(link).then(() => {
+                        that.isSpinning = false;
+                    });
                     that.set_file_type(false);
                 }
             }

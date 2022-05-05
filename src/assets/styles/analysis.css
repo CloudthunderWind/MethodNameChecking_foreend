@@ -1,9 +1,10 @@
 .analysis-wrapper {
+    position: relative;
     min-height: 100%;
     height: fit-content;
     width: 100%;
     padding: 10px 24px;
-    overflow: auto;
+    overflow: hidden;
 }
 
 /*显示源码的样式*/
@@ -114,6 +115,7 @@
 .recommend-block {
     min-width: fit-content;
     width: 30%;
+    max-width: 50%;
     height: 100%;
     margin-left: 36px;
     border-bottom: #dae0e5 solid 1px;
@@ -130,8 +132,12 @@
     padding: 6px 8px 8px 8px;
 }
 
+.recommend-body div {
+    word-break: break-all;
+}
+
 .target-name {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
 }
 
@@ -154,4 +160,20 @@
 /*附属样式*/
 .prefix-icon {
     margin-right: 8px;
+}
+
+.analysis-spinning {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    overflow: hidden;
+
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 5px;
+    z-index: 5000;
 }
