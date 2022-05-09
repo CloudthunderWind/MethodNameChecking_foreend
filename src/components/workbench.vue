@@ -157,13 +157,16 @@
                 "user_name",
                 "history_list",
                 "file_to_demonstrate",
-                "file_to_demonstrate_paths"
+                "file_to_demonstrate_paths",
+                "current_name",
+                "current_path"
             ])
         },
         methods: {
             ...mapMutations([
                 "set_current_path",
                 "set_current_name",
+                "set_current_path_list",
                 "set_file_type"
             ]),
             ...mapActions([
@@ -253,6 +256,10 @@
                 }).then(() => {
                     that.set_current_path(that.file_to_demonstrate.filepath);
                     that.set_current_name(that.file_to_demonstrate.filename.split("/").splice(-1)[0]);
+                    that.set_current_path_list([{
+                        name: that.current_name,
+                        path: that.current_path
+                    }]);
                     that.isSpinning = false;
                     that.$router.push({
                         path: "/analysis",

@@ -9,6 +9,7 @@ const getters = {
     file_type: state => state.data.file_type,
     current_path: state => state.data.current_path,
     current_name: state => state.data.current_name,
+    current_path_list: state => state.data.current_path_list,
     recommend_infos: state => state.data.recommend_infos,
     param_recommend_infos: state => state.data.param_recommend_infos
 };

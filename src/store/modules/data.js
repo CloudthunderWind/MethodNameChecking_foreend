@@ -15,23 +15,25 @@ import {
 const data = {
     state: {
         file_to_demonstrate: {
-            id: 0,
-            filename: "test.java",
+            // id: 0,
+            // filename: "test.java",
+            // filepath: ""
         },
-        file_content: "int x=10;\nint y=x+10;\n",
+        file_content: "",
         current_path: "",
         current_name: "",
+        current_path_list: [],
         file_type: true,
         file_to_demonstrate_paths: {
-            parentPath: "",
-            dirs: ["nil folder"],
-            files: ["test.java"],
+            // parentPath: "",
+            // dirs: ["nil folder"],
+            // files: ["test.java"],
         },
         recommend_infos: [
-            {
-                method_name: "test",
-                possible_recommend: "test"
-            }
+            // {
+            //     method_name: "test",
+            //     possible_recommend: "test"
+            // }
         ],
         param_recommend_infos: [
             // {
@@ -57,6 +59,15 @@ const data = {
         },
         set_current_name(state, name) {
             state.current_name = name;
+        },
+        set_current_path_list(state, path_list) {
+            state.current_path_list = path_list;
+        },
+        add_one_path(state, path) {
+            state.current_path_list.push(path);
+        },
+        del_one_path(state) {
+            state.current_path_list.pop();
         },
         set_file_type(state, type) {
             state.file_type = type;

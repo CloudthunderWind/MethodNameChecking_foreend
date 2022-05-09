@@ -6,8 +6,8 @@
                 <code-outlined/>
                 <router-link to="../workbench">工作台</router-link>
             </a-breadcrumb-item>
-            <a-breadcrumb-item>
-                <a>{{file_to_demonstrate.filename}}</a>
+            <a-breadcrumb-item v-for="(path) in current_path_list">
+                <a :data-link="path.path.replace(/\\/g,'/')" @click="selectToPath">{{path.name}}</a>
             </a-breadcrumb-item>
         </a-breadcrumb>
         <div class="code-block">
@@ -20,10 +20,10 @@
                         </div>
                     </div>
                     <div class="directory-body">
-                        <div v-if="file_to_demonstrate.filepath.replace(/\\/g, '/') !== current_path"
+                        <div v-if="current_path_list.length>1"
                              class="directory-body-item"
                              :data-link="file_to_demonstrate_paths.parentPath.replace(/\\/g, '/')"
-                             @click="linkToPath">
+                             @click="backToPath">
                             ../
                         </div>
                         <div v-for="(dir_path) in file_to_demonstrate_paths.dirs"
@@ -58,6 +58,9 @@
                 <div v-if="(param_recommend_infos.length+recommend_infos.length)<1" class="recommend-body">
                     <div class="target-name">No recommendation.</div>
                 </div>
+                <div v-if="recommend_infos.length>0" class="recommend-body">
+                    <div class="target-name">=== Method Recommendation ===</div>
+                </div>
                 <div v-for="info in recommend_infos" class="recommend-body">
                     <div>
                         <a class="target-name">{{"MethodName:"+info.method_name}}</a>
@@ -65,6 +68,9 @@
                     <div class="recommend-name">
                         The method name may be better with "<a>{{info.possible_recommend}}</a>
                     </div>
+                </div>
+                <div v-if="param_recommend_infos.length>0" class="recommend-body">
+                    <div class="target-name">=== Param recommendation ===</div>
                 </div>
                 <div v-for="info in param_recommend_infos" class="recommend-body">
                     <div>
@@ -116,6 +122,7 @@
                 "file_type",
                 "current_path",
                 "current_name",
+                "current_path_list",
                 "recommend_infos",
                 "param_recommend_infos"
             ])
@@ -130,6 +137,9 @@
                 "set_file_type",
                 "set_current_path",
                 "set_current_name",
+                "set_current_path_list",
+                "add_one_path",
+                "del_one_path"
             ]),
             ...mapActions([
                 "search_by_record_id",
@@ -138,7 +148,7 @@
                 "get_param_recommend_by_filepath",
                 "get_recommend_by_filepath"
             ]),
-            async linkToPath(e) {
+            linkToPath(e) {
                 let that = this;
                 let link = e.target.getAttribute("data-link");
                 this.isSpinning = true;
@@ -153,14 +163,53 @@
                             });
                         });
                         that.set_current_name(link.split("/").slice(-1)[0]);
+                        that.del_one_path();
+                        that.add_one_path({
+                            name: that.current_name,
+                            path: that.current_path
+                        });
                     });
                     that.set_file_type(true);
                 } else {
                     that.get_dir_path(link).then(() => {
+                        that.set_current_name(link.split("/").slice(-1)[0]);
+                        that.add_one_path({
+                            name: that.current_name,
+                            path: that.current_path
+                        });
                         that.isSpinning = false;
                     });
                     that.set_file_type(false);
                 }
+            },
+            backToPath(e) {
+                let that = this;
+                let link = e.target.getAttribute("data-link");
+                this.isSpinning = true;
+                this.set_current_path(link);
+                that.get_dir_path(link).then(() => {
+                    that.set_current_name(link.split("/").slice(-1)[0]);
+                    that.del_one_path();
+                    that.isSpinning = false;
+                });
+                that.set_file_type(false);
+            },
+            selectToPath(e) {
+                let that = this;
+                let link = e.target.getAttribute("data-link");
+                this.isSpinning = true;
+                let i = 0;
+                for (; i < this.current_path_list.length; i++) {
+                    if (link === this.current_path_list[i].path) {
+                        break;
+                    }
+                }
+                that.get_dir_path(link).then(() => {
+                    that.set_current_name(link.split("/").slice(-1)[0]);
+                    that.set_current_path_list(that.current_path_list.slice(0, i + 1));
+                    that.isSpinning = false;
+                });
+                that.set_file_type(false);
             }
         }
     };
