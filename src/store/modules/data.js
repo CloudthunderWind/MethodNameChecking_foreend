@@ -1,7 +1,7 @@
 import {
     getFileContentAPI,
-    getFileDirectoryAPI, getParamRecommendByFilepathAPI,
-    getRecommendByFilepathAPI,
+    getFileDirectoryAPI,
+    getReadmeAPI,
     importFromGitAPI,
     uploadFileAPI
 } from "@/api/fileAPI";
@@ -11,6 +11,7 @@ import {
     searchByRecordIdAPI,
     searchByUserNameAPI
 } from "@/api/dataAPI";
+import {getParamRecommendByFilepathAPI, getRecommendByFilepathAPI} from "@/api/recommendAPI";
 
 const data = {
     state: {
@@ -32,6 +33,7 @@ const data = {
         recommend_infos: [
             // {
             //     method_name: "test",
+            //     method_location:"1",
             //     possible_recommend: "test"
             // }
         ],
@@ -39,7 +41,7 @@ const data = {
             // {
             //     param_name: "test",
             //     method_name: "test",
-            //     method_location: "1",
+            //     param_location: "1",
             //     possible_recommends: ["test"]
             // }
         ]
@@ -157,6 +159,15 @@ const data = {
                 commit("set_file_to_demonstrate_paths", res.data);
             } else {
                 message.error("找不到文件路径");
+            }
+        },
+        get_readme: async function ({commit}, dir_path) {
+            const res = await getReadmeAPI(dir_path);
+            if (res.isSuccess) {
+                commit("set_file_content", res.data);
+                commit("set_current_name", "README.md");
+            } else {
+                message.info("找不到README.md文件");
             }
         }
     }

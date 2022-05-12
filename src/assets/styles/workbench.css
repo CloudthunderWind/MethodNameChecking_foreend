@@ -154,14 +154,17 @@
     flex-flow: column;
 
     color: #aaaaaa;
-    background-color: white;
+    background-color: #f6f8fa;
     font-size: 16px;
     height: 110px;
 }
 
 .history-card-footer {
     display: flex;
+    column-gap: 20px;
     justify-content: space-between;
+    align-items: center;
+
     border-radius: 0 0 3px 3px;
     background-color: #f6f8fa;
     padding: 4px 16px;
@@ -171,4 +174,24 @@
 
 .history-card-footer span:hover {
     cursor: pointer;
+}
+
+.prefix-circle {
+    display: inline-block;
+    margin-right: 6px;
+
+    background-color: #b07219;
+    border-radius: 6px;
+    height: 12px;
+    width: 12px;
+    border: #ac721f solid 1px;
+}
+
+.footer-tag {
+    width: 50%;
+}
+
+.footer-func {
+    display: flex;
+    column-gap: 15px;
 }

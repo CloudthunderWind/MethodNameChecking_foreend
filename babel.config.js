@@ -12,6 +12,7 @@ module.exports = {
                 "markup"
             ],
             "plugins": [
+                "line-highlight",
                 "line-numbers"
             ],
             "theme": "default",

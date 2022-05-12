@@ -100,11 +100,17 @@
                      :data-id="file.id">
                     <div class="history-card-title">{{file.filename}}</div>
                     <div class="history-card-body">
-                        <span>暂无预览</span>
+                        <span></span>
                     </div>
                     <div class="history-card-footer">
-                        <span :data-id="file.id" @click="find_details">查看</span>
-                        <span :data-id="file.id" @click="delete_history">删除</span>
+                        <div class="footer-tag">
+                            <div class="prefix-circle"></div>
+                            Java
+                        </div>
+                        <div class="footer-func">
+                            <span :data-id="file.id" @click="find_details">查看</span>
+                            <span :data-id="file.id" @click="delete_history">删除</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -178,7 +184,8 @@
                 "get_param_recommend_by_filepath",
                 "delete_record",
                 "get_file_content",
-                "get_dir_path"
+                "get_dir_path",
+                "get_readme"
             ]),
             // 上传文件方法
             open_upload_dialog() {
@@ -244,18 +251,16 @@
                 let id = e.target.getAttribute("data-id");
                 this.search_by_record_id(id).then(() => {
                     that.isSpinning = true;
+                    that.set_file_type(true);
                     if (that.file_to_demonstrate.filepath.indexOf(".") !== -1) {
-                        that.set_file_type(true);
                         that.get_file_content(that.file_to_demonstrate.filepath);
                     } else {
-                        that.set_file_type(false);
+                        that.set_current_name(that.file_to_demonstrate.filename.split("/").splice(-1)[0]);
+                        that.get_dir_path(that.file_to_demonstrate.filepath);
                     }
-                    that.get_dir_path(that.file_to_demonstrate.filepath);
-                    // that.get_recommend_by_filepath(that.file_to_demonstrate.filepath);
-
+                    that.get_readme(that.file_to_demonstrate.filepath);
                 }).then(() => {
                     that.set_current_path(that.file_to_demonstrate.filepath);
-                    that.set_current_name(that.file_to_demonstrate.filename.split("/").splice(-1)[0]);
                     that.set_current_path_list([{
                         name: that.current_name,
                         path: that.current_path

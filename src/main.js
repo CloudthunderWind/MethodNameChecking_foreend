@@ -7,6 +7,7 @@ import axios from "axios";
 import VueAxios from "vue-axios";
 import VueCookie from "vue-cookies";
 import Antd from "ant-design-vue";
+import $ from "jquery";
 import "ant-design-vue/dist/antd.css";
 
 import "highlight.js/styles/atom-one-light.css";

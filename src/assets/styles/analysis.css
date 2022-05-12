@@ -1,8 +1,8 @@
 .analysis-wrapper {
-    position: relative;
     min-height: 100%;
     height: fit-content;
     width: 100%;
+    min-width: fit-content;
     padding: 10px 24px;
     overflow: hidden;
 }
@@ -13,7 +13,9 @@
     flex-wrap: nowrap;
     justify-content: flex-start;
     align-content: space-between;
-    overflow: auto;
+    overflow-x: hidden;
+    min-width: fit-content;
+    width: 100%;
 
     box-sizing: border-box;
     max-height: calc(100% - 32px);
@@ -48,9 +50,8 @@
 
 /*显示项目目录的样式*/
 .project-block {
-    width: 65%;
+    width: 66%;
     height: fit-content;
-    min-width: fit-content;
     display: flex;
     flex-flow: column;
 }
@@ -68,21 +69,25 @@
 
 .directory-title {
     display: flex;
+    justify-content: space-between;
     padding: 6px 16px;
 }
 
 .directory-title-info {
-    display: inline-block;
-    position: relative;
+    display: flex;
     width: calc(100% - 32px);
     line-height: 14px;
 }
 
 .directory-title-info div {
-    position: absolute;
-    bottom: 4px;
-    left: 12px;
+    display: flex;
     font-size: 14px;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.directory-title-info div span {
+    margin: 4px 6px;
 }
 
 .directory-title-info div:hover {
@@ -93,9 +98,12 @@
 }
 
 .directory-body {
+    position: relative;
     border: 0;
     background-color: white;
     border-radius: 0 0 5px 5px;
+    transition: height 0.2s;
+    overflow-y: hidden;
 }
 
 .directory-body-item {
@@ -103,6 +111,7 @@
     line-height: 36px;
     height: 36px;
     padding: 0 20px;
+    user-select: none;
 }
 
 .directory-body-item:hover {
@@ -111,17 +120,86 @@
     cursor: pointer;
 }
 
+.disabled-item {
+    color: grey;
+    background-color: white;
+}
+
+.disabled-item:hover {
+    cursor: not-allowed;
+    color: grey;
+    background-color: white;
+}
+
+.caret-down-icon {
+    display: flex;
+    align-items: center;
+    color: grey;
+    cursor: pointer;
+    width: 28px;
+}
+
+#caret-icon {
+    width: 28px;
+    transition: transform 0.2s ease-in;
+}
+
+.caret-expand {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    height: 28px;
+    background-image: linear-gradient(rgba(218, 224, 229, 0), rgba(218, 224, 229, 0.38));
+    border-radius: 0 0 5px 5px;
+    cursor: pointer;
+}
+
+.caret-expand span {
+    display: flex;
+    align-items: center;
+}
+
+.caret-expand span:hover {
+    color: #0969da;
+}
+
+
 /*推荐代码名部分的样式*/
 .recommend-block {
-    min-width: fit-content;
+    position: absolute;
+    right: 24px;
+    left: calc(70% - 24px);
+
     width: 30%;
-    max-width: 50%;
-    height: 100%;
-    margin-left: 36px;
+    min-width: fit-content;
     border-bottom: #dae0e5 solid 1px;
+    background-color: white;
+    overflow-y: auto;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.2);
+    transition: all 0.2s;
+    height: 10px;
+    border: none
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.4);
 }
 
 .recommend-title {
+    display: flex;
+    justify-content: space-between;
+
     font-weight: 600;
     padding: 6px 8px;
     border-bottom: #dae0e5 solid 1px;
@@ -134,6 +212,32 @@
 
 .recommend-body div {
     word-break: break-all;
+}
+
+.recommend-filter-block {
+    font-size: 12px;
+    border-bottom: #dae0e5 solid 1px;
+    transition: height 0.2s;
+    overflow-y: hidden;
+    height: 0;
+}
+
+.recommend-filter-block-wrapper {
+    display: flex;
+    flex-flow: column;
+    margin: 6px 24px;
+}
+
+.recommend-filter-icon {
+    font-weight: 400;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.recommend-filter-icon:hover {
+    color: #0969da;
 }
 
 .target-name {
@@ -154,6 +258,9 @@
     text-align: right;
     padding: 0 8px;
     border-radius: 3px;
+}
+
+.recommend-wrapper {
 
 }
 
@@ -176,4 +283,29 @@
     background-color: rgba(255, 255, 255, 0.7);
     border-radius: 5px;
     z-index: 5000;
+}
+
+.back-top {
+    position: fixed;
+    right: 40px;
+    bottom: 40px;
+    font-size: 24px;
+    color: white;
+    border-radius: 20px;
+    height: 40px;
+    width: 40px;
+    background-color: rgba(140, 140, 140, 1);
+    cursor: pointer;
+
+    transition: background-color, opacity 0.2s, 0.4s;
+    opacity: 0;
+}
+
+.back-top:hover {
+    background-color: black;
+}
+
+.back-top span {
+    height: 40px;
+    width: 40px;
 }

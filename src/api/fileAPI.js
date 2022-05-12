@@ -37,18 +37,10 @@ export function getFileContentAPI(data) {
     });
 }
 
-// 用记录id查询推荐
-export function getRecommendByFilepathAPI(data) {
+export function getReadmeAPI(data) {
+    data.replace(/\\/g, "/");
     return axios({
-        url: `${api.file_api}/gtnm?filepath=${data}`,
-        type: "GET"
-    });
-}
-
-// 用记录id查询参数推荐
-export function getParamRecommendByFilepathAPI(data) {
-    return axios({
-        url: `${api.file_api}/paramRecommend?filepath=${data}`,
+        url: `${api.file_api}/readme?dirpath=${data}`,
         type: "GET"
     });
 }
