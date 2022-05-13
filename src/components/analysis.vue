@@ -61,6 +61,13 @@
                     <pre id="display-code" class="line-numbers linkable-line-numbers code-body"><code
                             class="language-java">{{file_content}}</code></pre>
                 </div>
+                <div class="code" v-if="readme_content">
+                    <div class="code-title">
+                        <span>README.md</span>
+                    </div>
+                    <v-md-preview class="code-body" :text="readme_content">
+                    </v-md-preview>
+                </div>
             </div>
             <div class="recommend-block">
                 <div class="recommend-title">
@@ -288,6 +295,7 @@
                 "file_to_demonstrate",
                 "file_to_demonstrate_paths",
                 "file_content",
+                "readme_content",
                 "file_type",
                 "current_path",
                 "current_name",
@@ -300,7 +308,7 @@
             return {
                 isSpinning: false,
                 isFold: false,
-                isFilter: true,
+                isFilter: false,
                 numberOfDirectoryLines: 0,
                 showBackTop: true,
                 methodRecommendInfos: [],
@@ -466,14 +474,14 @@
             },
             // 筛选相关
             changeFilter() {
+                this.isFilter = !this.isFilter;
                 if (this.isFilter) {
-                    $("#filter").css({"height": 0});
-                    $(".recommend-filter-icon").css({"color": "#595959"});
-                } else {
                     $("#filter").css({"height": "145.3px"});
                     $(".recommend-filter-icon").css({"color": "#0969da"});
+                } else {
+                    $("#filter").css({"height": 0});
+                    $(".recommend-filter-icon").css({"color": "#595959"});
                 }
-                this.isFilter = !this.isFilter;
             },
             filterMethodName() {
                 if (this.filterOptions.methodNameRecommend) {

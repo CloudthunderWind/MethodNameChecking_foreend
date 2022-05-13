@@ -9,7 +9,8 @@ module.exports = {
                 "css",
                 "javascript",
                 "java",
-                "markup"
+                "markup",
+                "markdown"
             ],
             "plugins": [
                 "line-highlight",

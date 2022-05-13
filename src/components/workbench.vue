@@ -1,7 +1,29 @@
 <template>
     <div class="workbench-wrapper">
+        <a-modal :visible="upload_visible"
+                 ok-text="完成上传"
+                 @ok="submitUploadFileList"
+                 @cancel="close_upload_dialog">
+            <template #title>
+                上传java源码或项目 <span style="font-size: 11px;color:#f7474b">(*文件会自动上传)</span>
+            </template>
+            <div class="data-uploader">
+                <a-upload-dragger
+                        v-model:file-list="upload_file_list"
+                        name="file"
+                        :data="{'username':user_name}"
+                        :mulitple="true"
+                        action="http://localhost:8088/file/uploadZip"
+                        @change="add_file"
+                        @drop="drop_file">
+                    <inbox-outlined style="font-size: 80px;color:#aaaaaa;margin-bottom: 8px"></inbox-outlined>
+                    <div>点击或拖动文件到此处以进行上传</div>
+                </a-upload-dragger>
+            </div>
+        </a-modal>
         <a-modal :visible="gitee_import_visible"
                  ok-text="导入"
+                 :confirmLoading="importLoading"
                  @ok="submitURL"
                  @cancel="close_github_import_dialog">
             <template #title>
@@ -31,32 +53,11 @@
                 </a-form-item>
             </a-form>
         </a-modal>
-        <a-modal :visible="upload_visible"
-                 ok-text="提交"
-                 @ok="submitUploadFileList"
-                 @cancel="close_upload_dialog">
-            <template #title>
-                上传java源码或项目
-            </template>
-            <div class="data-uploader">
-                <a-upload-dragger
-                        v-model:file-list="upload_file_list"
-                        name="file"
-                        :data="{'username':user_name}"
-                        :mulitple="true"
-                        action="http://localhost:8088/file/uploadZip"
-                        @change="add_file"
-                        @drop="drop_file">
-                    <inbox-outlined style="font-size: 80px;color:#aaaaaa;margin-bottom: 8px"></inbox-outlined>
-                    <div>点击或拖动文件到此处以进行上传</div>
-                </a-upload-dragger>
-            </div>
-        </a-modal>
         <div v-if="!history_visible" class="work-frame">
             <div class="part-wrapper">
                 <div class="record-card selector-block" @click="open_upload_dialog">
                     <upload-outlined style="font-size: 80px;"/>
-                    <span>上传代码</span>
+                    <span>上传java代码</span>
                 </div>
             </div>
             <div class="part-wrapper">
@@ -151,8 +152,10 @@
                 upload_request: "https://localhost:8080/file/uploadZip",
                 gitee_import_visible: false,
                 gitee_url: "",
+
                 history_visible: false,
-                isSpinning: false
+                isSpinning: false,
+                importLoading: false
             };
         },
         async mounted() {
@@ -202,7 +205,6 @@
             submitUploadFileList() {
                 let that = this;
                 that.upload_visible = false;
-                // this.upload_visible = false;
             },
             add_file(info) {
                 const status = info.file.status;
@@ -227,13 +229,16 @@
             },
             submitURL() {
                 let that = this;
+                this.importLoading = true;
                 this.import_from_git({
                     url: this.gitee_url,
                     username: this.user_name
                 }).then(() => {
-                    that.upload_visible = false;
+                    that.importLoading = false;
+                    that.gitee_import_visible = false;
+                }, () => {
+                    that.importLoading = false;
                 });
-                this.gitee_import_visible = false;
             },
             //历史记录方法
             open_history_block() {
@@ -251,10 +256,11 @@
                 let id = e.target.getAttribute("data-id");
                 this.search_by_record_id(id).then(() => {
                     that.isSpinning = true;
-                    that.set_file_type(true);
                     if (that.file_to_demonstrate.filepath.indexOf(".") !== -1) {
+                        that.set_file_type(true);
                         that.get_file_content(that.file_to_demonstrate.filepath);
                     } else {
+                        that.set_file_type(false);
                         that.set_current_name(that.file_to_demonstrate.filename.split("/").splice(-1)[0]);
                         that.get_dir_path(that.file_to_demonstrate.filepath);
                     }

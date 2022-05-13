@@ -114,7 +114,8 @@ pre[data-line] {
     padding: inherit 0;
     margin-top: 1em;
     background: hsla(24, 20%, 50%, .08);
-    background: linear-gradient(to right, hsla(24, 20%, 50%, .1) 70%, hsla(24, 20%, 50%, 0));
+    /*background: linear-gradient(to right, hsla(24, 20%, 50%, .1) 70%, hsla(24, 20%, 50%, 0));*/
+    background: linear-gradient(to right, hsla(40, 96%, 53%, 0.3), hsla(40, 96%, 53%, 0.07));
     pointer-events: none;
     line-height: inherit;
     white-space: pre
@@ -134,7 +135,8 @@ pre[data-line] {
     left: .6em;
     min-width: 1em;
     padding: 0 .5em;
-    background-color: hsla(24, 20%, 50%, .4);
+    /*修改高亮颜色*/
+    background-color: hsla(40, 96%, 53%, 0.5);
     color: #f4f1ef;
     font: bold 65%/1.5 sans-serif;
     text-align: center;

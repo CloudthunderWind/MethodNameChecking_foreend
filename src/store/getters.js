@@ -6,6 +6,7 @@ const getters = {
     file_to_demonstrate: state => state.data.file_to_demonstrate,
     file_to_demonstrate_paths: state => state.data.file_to_demonstrate_paths,
     file_content: state => state.data.file_content,
+    readme_content: state => state.data.readme_content,
     file_type: state => state.data.file_type,
     current_path: state => state.data.current_path,
     current_name: state => state.data.current_name,

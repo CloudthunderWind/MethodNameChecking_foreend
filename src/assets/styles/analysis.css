@@ -24,10 +24,9 @@
 }
 
 .code {
-    min-width: fit-content;
     height: fit-content;
     font-size: 12px;
-    width: 100%;
+    max-width: 100%;
     border-radius: 5px;
     background-color: #f6f8fa;
 
@@ -45,6 +44,7 @@
 .code-body {
     border: 0;
     border-radius: 0 0 5px 5px;
+    background-color: white;
 }
 
 
@@ -156,15 +156,14 @@
     cursor: pointer;
 }
 
+.caret-expand:hover {
+    color: #0969da;
+}
+
 .caret-expand span {
     display: flex;
     align-items: center;
 }
-
-.caret-expand span:hover {
-    color: #0969da;
-}
-
 
 /*推荐代码名部分的样式*/
 .recommend-block {
@@ -176,7 +175,8 @@
     min-width: fit-content;
     border-bottom: #dae0e5 solid 1px;
     background-color: white;
-    overflow-y: auto;
+    overflow-y: scroll;
+    max-height: calc(100% - 100px);
 }
 
 ::-webkit-scrollbar {

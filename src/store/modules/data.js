@@ -21,6 +21,7 @@ const data = {
             // filepath: ""
         },
         file_content: "",
+        readme_content: "",
         current_path: "",
         current_name: "",
         current_path_list: [],
@@ -56,6 +57,9 @@ const data = {
         set_file_content(state, content) {
             state.file_content = content;
         },
+        set_readme_content(state, content) {
+            state.readme_content = content;
+        },
         set_current_path(state, path) {
             state.current_path = path;
         },
@@ -85,20 +89,20 @@ const data = {
         upload_file: async function ({commit}, file_info) {
             const res = await uploadFileAPI(file_info);
             if (res.isSuccess) {
-                message.success("导入成功");
+                message.success("导入成功,可在历史记录中进行查看");
             } else {
-                message.error("导入失败");
+                message.error("导入失败,项目中不含任何java文件");
             }
         },
         import_from_git: async function ({commit}, url_info) {
             const res = await importFromGitAPI(url_info);
             if (res.isSuccess) {
-                message.success("导入成功，可在历史记录中进行查看");
+                message.success("导入成功,可在历史记录中进行查看");
                 commit("set_userName", res.data.username);
                 commit("set_userId", res.data.id);
                 commit("add_to_history_list", res.data);
             } else {
-                message.error("导入失败");
+                message.error("导入失败,项目中不含任何java文件");
             }
         },
         search_by_user_name: async function ({commit}, username) {
@@ -149,6 +153,7 @@ const data = {
             const res = await getFileContentAPI(file_path);
             if (res.isSuccess) {
                 commit("set_file_content", res.data);
+                commit("set_readme_content", "");
             } else {
                 message.error("找不到文件内容");
             }
@@ -164,8 +169,7 @@ const data = {
         get_readme: async function ({commit}, dir_path) {
             const res = await getReadmeAPI(dir_path);
             if (res.isSuccess) {
-                commit("set_file_content", res.data);
-                commit("set_current_name", "README.md");
+                commit("set_readme_content", res.data);
             } else {
                 message.info("找不到README.md文件");
             }
