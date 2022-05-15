@@ -12,7 +12,8 @@ const getters = {
     current_name: state => state.data.current_name,
     current_path_list: state => state.data.current_path_list,
     recommend_infos: state => state.data.recommend_infos,
-    param_recommend_infos: state => state.data.param_recommend_infos
+    param_recommend_infos: state => state.data.param_recommend_infos,
+    method_block_recommends: state => state.data.method_block_recommends
 };
 
 export default getters;

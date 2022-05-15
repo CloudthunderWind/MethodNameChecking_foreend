@@ -11,7 +11,11 @@ import {
     searchByRecordIdAPI,
     searchByUserNameAPI
 } from "@/api/dataAPI";
-import {getParamRecommendByFilepathAPI, getRecommendByFilepathAPI} from "@/api/recommendAPI";
+import {
+    getAllRecommendsByFilePathAPI,
+    getParamRecommendByFilepathAPI,
+    getRecommendByFilepathAPI
+} from "@/api/recommendAPI";
 
 const data = {
     state: {
@@ -45,7 +49,8 @@ const data = {
             //     param_location: "1",
             //     possible_recommends: ["test"]
             // }
-        ]
+        ],
+        method_block_recommends: []
     },
     mutations: {
         set_file_to_demonstrate(state, file) {
@@ -83,6 +88,9 @@ const data = {
         },
         set_param_recommend_infos(state, infos) {
             state.param_recommend_infos = infos;
+        },
+        set_method_block_recommends(state, recommends) {
+            state.method_block_recommends = recommends;
         }
     },
     actions: {
@@ -139,6 +147,14 @@ const data = {
                 }
             } else {
                 message.error("推荐信息获取失败");
+            }
+        },
+        get_all_recommends_by_filepath: async function ({commit}, filepath) {
+            const method_block_recommends = await getAllRecommendsByFilePathAPI(filepath);
+            if (res.isSuccess) {
+                commit("set_method_block_recommends", res.data);
+            } else {
+                message.error("推荐获取失败");
             }
         },
         delete_record: async function ({commit}, record_id) {

@@ -1,6 +1,6 @@
 <template>
     <div class="analysis-wrapper">
-        <a-spin class="analysis-spinning" v-if="isSpinning"/>
+        <a-spin class="analysis-spinning" v-if="isSpinning">第一次加载可能会持续1分钟左右，请耐心等待哦~</a-spin>
         <a-breadcrumb style="padding-left: 8px">
             <a-breadcrumb-item>
                 <code-outlined/>
@@ -82,12 +82,6 @@
                 <div id="filter" class="recommend-filter-block">
                     <div class="recommend-filter-block-wrapper">
                         <div>
-                            <a-checkbox v-model:checked="filterOptions.methodNameRecommend"
-                                        @change="filterMethodName">
-                                显示推荐的函数名
-                            </a-checkbox>
-                        </div>
-                        <div>
                             <a-checkbox v-model:checked="filterOptions.paramNameRecommend"
                                         @change="filterParamName">显示推荐的参数名
                             </a-checkbox>
@@ -123,19 +117,17 @@
                         </div>
                     </div>
                 </div>
-                <div v-if="(paramRecommendInfos.length+variableRecommendInfos.length+methodRecommendInfos.length)<1"
+                <div v-if="(methodBlockRecommends.length)<1"
                      class="recommend-body">
                     <div class="target-name">No recommendation.</div>
                 </div>
-                <div v-if="methodRecommendInfos.length>0" class="recommend-body">
-                    <div class="target-name">=== Method Recommendation ===</div>
-                </div>
-                <div v-for="info in methodRecommendInfos" class="recommend-body">
-                    <div v-if="displayItem(info.distance)">
+                <div v-for="info in methodBlockRecommends" class="recommend-body">
+                    <div>
                         <div>
+<!--                            方法推荐块-->
                             <a class="target-name"
                                :href="(info.method_location>=0)?'#display-code.'+info.method_location:''">
-                                {{"Method:"+info.method_name}}
+                                {{info.method_name_infos.method_signature}}
                             </a>
                         </div>
                         <div class="recommend-name">
@@ -147,65 +139,49 @@
                                 <span>{{info.possible_recommend}}</span>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div v-if="paramRecommendInfos.length>0" class="recommend-body">
-                    <div class="target-name">=== Param recommendation ===</div>
-                </div>
-                <div v-for="info in paramRecommendInfos" class="recommend-body">
-                    <div>
-                        <a class="target-name"
-                           :href="(info.param_location>=0)?'#display-code.'+info.param_location:''">
-                            {{"Param: "+info.param_name}}
-                        </a>
-                        <span class="target-location">
-                            {{info.param_location>=0?("On loc "+info.param_location):("Can't located param.")}}
-                        </span>
-                        <span class="target-location">
-                            {{"method: "+info.method_name}}
-                        </span>
-                    </div>
-                    <div class="recommend-name">
-                        Possible recommendations:
-                        <div v-for="(recommend,index) in info.possible_recommends">
+                        <div class="recommend-body">
+                            <div class="split-line"></div>
                             <div>
-                                <check-square-outlined v-if="info.recommends_distance[index]===1"
-                                                       style="color:#52c41a"/>
-                                <warning-outlined
-                                        v-if="info.recommends_distance[index]<1&&info.recommends_distance[index]>=0.3"
-                                        style="color:#faad14"/>
-                                <close-circle-outlined v-if="info.recommends_distance[index]<0.3"
-                                                       style="color:#f7474b"/>
-                                {{(index+1)+". "+recommend+"\n"}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div v-if="variableRecommendInfos.length>0" class="recommend-body">
-                    <div class="target-name">=== Variable recommendation ===</div>
-                </div>
-                <div v-for="info in variableRecommendInfos" class="recommend-body">
-                    <div>
-                        <a class="target-name"
-                           :href="(info.param_location>=0)?'#display-code.'+info.param_location:''">
-                            {{"Variable: "+info.param_name}}
-                        </a>
-                        <span class="target-location">
-                            {{info.param_location>=0?("On loc "+info.param_location):("Can't located param.")}}
-                        </span>
-                    </div>
-                    <div class="recommend-name">
-                        Possible recommendations:
-                        <div v-for="(recommend,index) in info.possible_recommends">
-                            <div>
-                                <check-square-outlined v-if="info.recommends_distance[index]===1"
-                                                       style="color:#52c41a"/>
-                                <warning-outlined
-                                        v-if="info.recommends_distance[index]<1&&info.recommends_distance[index]>=0.3"
-                                        style="color:#faad14"/>
-                                <close-circle-outlined v-if="info.recommends_distance[index]<0.3"
-                                                       style="color:#f7474b"/>
-                                {{(index+1)+". "+recommend+"\n"}}
+                                <div>
+<!--                                    参数推荐块-->
+                                    <div v-for="param_info in info.param_recommend_infos" class="recommend-body">
+                                        <div>
+                                            <a class="target-name"
+                                               :href="(param_info.param_location>=0)?'#display-code.'+param_info.param_location:''">
+                                                {{param_info.param_name}}
+                                            </a>
+                                        </div>
+                                        <div class="recommend-name">
+                                            Possible recommendations:
+                                            <div v-for="(param_recommend,index) in param_info.possible_recommends">
+                                                <check-square-outlined v-if="param_info.recommends_distance[index]===1" style="color:#52c41a"/>
+                                                <warning-outlined v-if="param_info.recommends_distance[index]<1&&param_info.recommends_distance[index]>=0.3" style="color:#faad14"/>
+                                                <close-circle-outlined v-if="param_info.recommends_distance[index].distance<0.3" style="color:#f7474b"/>
+                                                <span>{{param_recommend}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+<!--                                    变量推荐块-->
+                                    <div v-for="variable_info in info.variable_recommend_infos" class="recommend-body">
+                                        <div>
+                                            <a class="target-name"
+                                               :href="(variable_info.param_location>=0)?'#display-code.'+variable_info.param_location:''">
+                                                {{variable_info.param_name}}
+                                            </a>
+                                        </div>
+                                        <div class="recommend-name">
+                                            Possible recommendations:
+                                            <div v-for="(variable_recommend,index) in variable_info.possible_recommends">
+                                                <check-square-outlined v-if="variable_info.recommends_distance[index]===1" style="color:#52c41a"/>
+                                                <warning-outlined v-if="variable_info.recommends_distance[index]<1&&variable_info.recommends_distance[index]>=0.3" style="color:#faad14"/>
+                                                <close-circle-outlined v-if="variable_info.recommends_distance[index].distance<0.3" style="color:#f7474b"/>
+                                                <span>{{variable_recommend}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -301,7 +277,8 @@
                 "current_name",
                 "current_path_list",
                 "recommend_infos",
-                "param_recommend_infos"
+                "param_recommend_infos",
+                "method_block_recommends"
             ])
         },
         data() {
@@ -311,17 +288,14 @@
                 isFilter: false,
                 numberOfDirectoryLines: 0,
                 showBackTop: true,
-                methodRecommendInfos: [],
-                paramRecommendInfos: [],
-                variableRecommendInfos: [],
+                methodBlockRecommends: [],
                 // 筛选选项
                 filterOptions: {
-                    methodNameRecommend: true,
                     paramNameRecommend: true,
                     variableNameRecommend: true,
                     displayError: true,
                     displayWarning: true,
-                    displaySuccess: true
+                    displaySuccess: false
                 }
             };
         },
@@ -341,7 +315,8 @@
                 "get_file_content",
                 "get_dir_path",
                 "get_param_recommend_by_filepath",
-                "get_recommend_by_filepath"
+                "get_recommend_by_filepath",
+                "get_all_recommends_by_filepath"
             ]),
             // 分离参数推荐和变量推荐
             splitParamAndVariable() {
@@ -373,16 +348,24 @@
                 this.isSpinning = true;
                 this.set_current_path(link);
                 if (link.indexOf(".") !== -1) {
+                    // 如果是一个文件，则获取它的内容
                     that.get_file_content(link).then(() => {
                         Prism.highlightAll();
-                        that.get_param_recommend_by_filepath(link).then(() => {
-                            that.splitParamAndVariable();
-                            // that.get_recommend_by_filepath(link).then(() => {
-                            // that.recommendInfos = that.recommend_infos;
+                        // that.get_param_recommend_by_filepath(link).then(() => {
+                        //     that.splitParamAndVariable();
+                        //     that.get_recommend_by_filepath(link).then(() => {
+                        //         that.recommendInfos = that.recommend_infos;
+                        //         that.$message.success("推荐获取成功");
+                        //         that.isSpinning = false;
+                        //     });
+                        // });
+
+                        that.get_all_recommends_by_filepath(link).then(() => {
+                            that.methodBlockRecommends = that.method_block_recommends;
                             that.$message.success("推荐获取成功");
                             that.isSpinning = false;
-                            // });
                         });
+
                         that.set_current_name(link.split("/").slice(-1)[0]);
                         that.del_one_path();
                         that.add_one_path({
@@ -392,6 +375,7 @@
                     });
                     that.set_file_type(true);
                 } else {
+                    // 如果是一个目录
                     that.get_dir_path(link).then(() => {
                         that.set_current_name(link.split("/").slice(-1)[0]);
                         that.add_one_path({
@@ -468,12 +452,11 @@
             },
             // 清空当前展示的推荐
             clearDemonstrate() {
-                this.paramRecommendInfos = [];
-                this.variableRecommendInfos = [];
-                this.methodRecommendInfos = [];
+                this.methodBlockRecommends = [];
             },
             // 筛选相关
             changeFilter() {
+                // 改变filter栏的状态和filter图标的颜色
                 this.isFilter = !this.isFilter;
                 if (this.isFilter) {
                     $("#filter").css({"height": "145.3px"});
@@ -481,13 +464,6 @@
                 } else {
                     $("#filter").css({"height": 0});
                     $(".recommend-filter-icon").css({"color": "#595959"});
-                }
-            },
-            filterMethodName() {
-                if (this.filterOptions.methodNameRecommend) {
-                    this.methodRecommendInfos = this.recommend_infos;
-                } else {
-                    this.methodRecommendInfos = [];
                 }
             },
             filterParamName() {

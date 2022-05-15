@@ -4,6 +4,13 @@ const api = {
     file_api: "/recommend"
 };
 
+export function getAllRecommendsByFilePathAPI(data) {
+    return axios({
+        url: `${api.file_api}/recommendAll?file=${data}`,
+        type: "GET"
+    });
+}
+
 
 export function getRecommendByFilepathAPI(data) {
     return axios({
