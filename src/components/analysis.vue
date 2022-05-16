@@ -373,7 +373,7 @@
                         // });
 
                         that.get_all_recommends_by_filepath(link).then(() => {
-                            that.methodBlockRecommends = that.method_block_recommends;
+                            that.filterInfo();
                             that.$message.success("推荐获取成功");
                             that.isSpinning = false;
                         });
@@ -511,6 +511,7 @@
                 }
             },
             filterType(type) {
+                // 先过滤类型
                 for (let info of this.methodBlockRecommends) {
                     if (info.method_recommend_infos.accuracy_type === type) {
                         info.method_recommend_infos.possible_recommend = null;
@@ -539,6 +540,28 @@
                         }
                         variable_info.possible_recommends = filtered_recommend;
                         variable_info.recommends_accuracy_type = filtered_type;
+                    }
+                }
+                // 类型过滤完后，如果有表项变为空，将其删除
+                for (let i = 0; i < this.methodBlockRecommends.length; i++) {
+                    let info = this.methodBlockRecommends[i];
+                    for (let j = 0; j < info.param_recommend_infos.length; j++) {
+                        if (info.param_recommend_infos[j].possible_recommends.length === 0) {
+                            info.param_recommend_infos.splice(j, 1);
+                            j--;
+                        }
+                    }
+                    for (let j = 0; j < info.variable_recommend_infos.length; j++) {
+                        if (info.variable_recommend_infos[j].possible_recommends.length === 0) {
+                            info.variable_recommend_infos.splice(j, 1);
+                            j--;
+                        }
+                    }
+                    if (info.param_recommend_infos.length === 0
+                        && info.variable_recommend_infos.length === 0
+                        && info.method_recommend_infos.possible_recommend === null) {
+                        this.methodBlockRecommends.splice(i, 1);
+                        i--;
                     }
                 }
             }
