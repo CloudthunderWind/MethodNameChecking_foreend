@@ -19,11 +19,7 @@ import {
 
 const data = {
     state: {
-        file_to_demonstrate: {
-            // id: 0,
-            // filename: "test.java",
-            // filepath: ""
-        },
+        file_to_demonstrate: {},
         file_content: "",
         readme_content: "",
         current_path: "",
@@ -31,9 +27,9 @@ const data = {
         current_path_list: [],
         file_type: true,
         file_to_demonstrate_paths: {
-            // parentPath: "",
             // dirs: ["nil folder"],
-            // files: ["test.java"],
+            // java_files: ["test.java"],
+            // other_files:[]
         },
         recommend_infos: [
             // {
@@ -50,7 +46,39 @@ const data = {
             //     possible_recommends: ["test"]
             // }
         ],
-        method_block_recommends: []
+        method_block_recommends: [
+            {
+                method_name: "testMethod",
+                method_recommend_infos: {
+                    method_name: "testMethod",
+                    method_signature: "public void testMethod(String s,String b)",
+                    possible_recommend: "TestMethod",
+                    accuracy_type: "Warning"
+                },
+                param_recommend_infos: [
+                    {
+                        param_name: "s",
+                        possible_recommends: [
+                            "s", "SB", "NMB"
+                        ],
+                        recommends_accuracy_type: [
+                            "Success", "Warning", "Danger"
+                        ]
+                    },
+                    {
+                        param_name: "b",
+                        possible_recommends: [
+                            "b", "SB", "2B"
+                        ],
+                        recommends_accuracy_type: [
+                            "Success", "Warning", "Danger"
+                        ]
+                    }
+                ],
+                variable_recommend_infos: []
+            }
+        ],
+        number_of_directory_lines: 0
     },
     mutations: {
         set_file_to_demonstrate(state, file) {
@@ -91,6 +119,12 @@ const data = {
         },
         set_method_block_recommends(state, recommends) {
             state.method_block_recommends = recommends;
+        },
+        get_number_of_directory_lines(state) {
+            state.number_of_directory_lines = (state.current_path_list.length > 1 ? 1 : 0)
+                + state.file_to_demonstrate_paths.dirs.length
+                + state.file_to_demonstrate_paths.javaFiles.length
+                + state.file_to_demonstrate_paths.otherFiles.length;
         }
     },
     actions: {
@@ -150,7 +184,7 @@ const data = {
             }
         },
         get_all_recommends_by_filepath: async function ({commit}, filepath) {
-            const method_block_recommends = await getAllRecommendsByFilePathAPI(filepath);
+            const res = await getAllRecommendsByFilePathAPI(filepath);
             if (res.isSuccess) {
                 commit("set_method_block_recommends", res.data);
             } else {

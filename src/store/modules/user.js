@@ -7,7 +7,6 @@ const user = {
         user_name: "j",
         isLogged: false,
         history_list: [
-
         ]
     },
     mutations: {

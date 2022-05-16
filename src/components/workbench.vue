@@ -272,6 +272,7 @@
                         path: that.current_path
                     }]);
                     that.isSpinning = false;
+                }).then(() => {
                     that.$router.push({
                         path: "/analysis",
                     });
